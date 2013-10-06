@@ -23,6 +23,13 @@
 #define AUTHOR_NAME       "Darren Hiebert"
 #define AUTHOR_EMAIL      "dhiebert@users.sourceforge.net"
 
+#ifdef SUPPORT_MBCS_JA_COMMENT
+# define PROGRAM_JP_VERSION	"J1"
+# define JP_AUTHOR_NAME		"HIGASHI Hirohito"
+# define JP_AUTHOR_URL		"https://github.com/vim-jp/ctags"
+# define JP_AUTHOR_TWITTER	"Twitter: @h_east"
+#endif
+
 #endif	/* _CTAGS_H */
 
 /* vi:set tabstop=4 shiftwidth=4: */

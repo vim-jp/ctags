@@ -47,6 +47,9 @@
 #include "routines.h"
 #include "sort.h"
 #include "strlist.h"
+#ifdef SUPPORT_MBCS_JA_COMMENT
+# include "mbcs_ja.h"
+#endif
 
 /*
 *   MACROS
@@ -145,6 +148,9 @@ static void addPseudoTags (void)
 	{
 		char format [11];
 		const char *formatComment = "unknown format";
+#ifdef SUPPORT_MBCS_JA_COMMENT
+		const char *encoding = NULL;
+#endif
 
 		sprintf (format, "%u", Option.tagFileFormat);
 
@@ -162,7 +168,28 @@ static void addPseudoTags (void)
 		writePseudoTag ("TAG_PROGRAM_AUTHOR",  AUTHOR_NAME,  AUTHOR_EMAIL);
 		writePseudoTag ("TAG_PROGRAM_NAME",    PROGRAM_NAME, "");
 		writePseudoTag ("TAG_PROGRAM_URL",     PROGRAM_URL,  "official site");
+#ifndef SUPPORT_MBCS_JA_COMMENT
 		writePseudoTag ("TAG_PROGRAM_VERSION", PROGRAM_VERSION, "");
+#else
+		writePseudoTag ("TAG_PROGRAM_JP_AUTHOR",
+					JP_AUTHOR_NAME, JP_AUTHOR_TWITTER);
+		writePseudoTag ("TAG_PROGRAM_JP_URL",	JP_AUTHOR_URL, "");
+		writePseudoTag ("TAG_PROGRAM_VERSION",
+					PROGRAM_VERSION PROGRAM_JP_VERSION, "");
+
+		switch (Option.jcode)
+		{
+			case JCODE_ASCII:	break;
+			case JCODE_SJIS:	encoding = "cp932";		break;
+			case JCODE_EUC:		encoding = "euc-jp";	break;
+			case JCODE_UTF8:	encoding = "utf-8";		break;
+		}
+
+		if (encoding != NULL)
+		{
+			writePseudoTag ("TAG_FILE_ENCODING", encoding, "");
+		}
+#endif
 	}
 }
 
@@ -578,6 +605,10 @@ static size_t writeSourceLine (FILE *const fp, const char *const line)
 {
 	size_t length = 0;
 	const char *p;
+#ifdef SUPPORT_MBCS_JA_COMMENT
+    int mblen;
+    int ki;
+#endif
 
 	/*  Write everything up to, but not including, a line end character.
 	 */
@@ -589,6 +620,17 @@ static size_t writeSourceLine (FILE *const fp, const char *const line)
 		if (c == CRETURN  ||  c == NEWLINE)
 			break;
 
+#ifdef SUPPORT_MBCS_JA_COMMENT
+		mblen = mbcs_lead_byte(c);
+		if (mblen)
+		{
+			for (ki = 0; ki < mblen; ki++)	
+				putc(*p++, fp);
+			--p;
+			length += mblen;
+			continue;
+		}
+#endif
 		/*  If character is '\', or a terminal '$', then quote it.
 		 */
 		if (c == BACKSLASH  ||  c == (Option.backward ? '?' : '/')  ||
@@ -611,6 +653,10 @@ static size_t writeCompactSourceLine (FILE *const fp, const char *const line)
 	size_t  length = 0;
 	const char *p;
 	int c;
+#ifdef SUPPORT_MBCS_JA_COMMENT
+    int mblen;
+    int ki;
+#endif
 
 	/*  Write everything up to, but not including, the newline.
 	 */
@@ -619,6 +665,17 @@ static size_t writeCompactSourceLine (FILE *const fp, const char *const line)
 		if (lineStarted  || ! isspace (c))  /* ignore leading spaces */
 		{
 			lineStarted = TRUE;
+#ifdef SUPPORT_MBCS_JA_COMMENT
+			mblen = mbcs_lead_byte(c);
+			if (mblen)
+			{
+				for (ki = 0; ki < mblen; ki++)	
+					putc(*p++, fp);
+				--p;
+				length += mblen;
+				continue;
+			}
+#endif
 			if (isspace (c))
 			{
 				int next;

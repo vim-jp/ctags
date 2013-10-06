@@ -23,6 +23,9 @@
 #include "options.h"
 #include "read.h"
 #include "vstring.h"
+#ifdef SUPPORT_MBCS_JA_COMMENT
+# include "mbcs_ja.h"
+#endif
 
 /*
 *   MACROS
@@ -440,9 +443,23 @@ static Comment isComment (void)
 int skipOverCComment (void)
 {
 	int c = fileGetc ();
+#ifdef SUPPORT_MBCS_JA_COMMENT
+    int mblen;
+    int ki;
+#endif
 
 	while (c != EOF)
 	{
+#ifdef SUPPORT_MBCS_JA_COMMENT
+		mblen = mbcs_lead_byte(c);
+		if (mblen)
+		{
+			for (ki = 0; ki < mblen-1; ki++)	
+				fileGetc();
+			c = fileGetc();
+			continue;
+		}
+#endif
 		if (c != '*')
 			c = fileGetc ();
 		else
@@ -466,9 +483,22 @@ int skipOverCComment (void)
 static int skipOverCplusComment (void)
 {
 	int c;
+#ifdef SUPPORT_MBCS_JA_COMMENT
+    int mblen;
+    int ki;
+#endif
 
 	while ((c = fileGetc ()) != EOF)
 	{
+#ifdef SUPPORT_MBCS_JA_COMMENT
+		mblen = mbcs_lead_byte(c);
+		if (mblen)
+		{
+			for (ki = 0; ki < mblen-1; ki++)
+				fileGetc();
+			continue;
+		}
+#endif
 		if (c == BACKSLASH)
 			fileGetc ();  /* throw away next character, too */
 		else if (c == NEWLINE)
@@ -483,9 +513,22 @@ static int skipOverCplusComment (void)
 static int skipToEndOfString (boolean ignoreBackslash)
 {
 	int c;
+#ifdef SUPPORT_MBCS_JA_COMMENT
+    int mblen;
+    int ki;
+#endif
 
 	while ((c = fileGetc ()) != EOF)
 	{
+#ifdef SUPPORT_MBCS_JA_COMMENT
+		mblen = mbcs_lead_byte(c);
+		if (mblen)
+		{
+			for (ki = 0; ki < mblen-1; ki++)
+				fileGetc();
+			continue;
+		}
+#endif
 		if (c == BACKSLASH && ! ignoreBackslash)
 			fileGetc ();  /* throw away next character, too */
 		else if (c == DOUBLE_QUOTE)
@@ -502,9 +545,22 @@ static int skipToEndOfChar (void)
 {
 	int c;
 	int count = 0, veraBase = '\0';
+#ifdef SUPPORT_MBCS_JA_COMMENT
+    int mblen;
+    int ki;
+#endif
 
 	while ((c = fileGetc ()) != EOF)
 	{
+#ifdef SUPPORT_MBCS_JA_COMMENT
+		mblen = mbcs_lead_byte(c);
+		if (mblen)
+		{
+			for (ki = 0; ki < mblen-1; ki++)
+				fileGetc();
+			continue;
+		}
+#endif
 	    ++count;
 		if (c == BACKSLASH)
 			fileGetc ();  /* throw away next character, too */

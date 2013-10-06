@@ -19,7 +19,8 @@ LIB	= -L$(BCCLOC)\lib
 #	add -v for source debugging
 OPTIMIZE= -1- -O1
 
-CFLAGS	= -DMSDOS -ml -d -w-ccc -w-par -w-pia -w-rch -w-sus $(INC)
+##CFLAGS	= -DMSDOS -ml -d -w-ccc -w-par -w-pia -w-rch -w-sus $(INC)
+CFLAGS	= -DMSDOS -DSUPPORT_MBCS_JA_COMMENT -ml -d -w-ccc -w-par -w-pia -w-rch -w-sus $(INC)
 LFLAGS	= $(LIB) $(EXTRA)
 EXTRA_LIBS =
 

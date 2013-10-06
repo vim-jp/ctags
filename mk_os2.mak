@@ -53,7 +53,8 @@ release:
 # (manually or by running configure)
 # Otherwise use built-in defaults (#ifdef OS2)!
 # DEFINES=-DHAVE_CONFIG_H
-DEFINES=-DOS2
+##DEFINES=-DOS2
+DEFINES=-DOS2 -DSUPPORT_MBCS_JA_COMMENT
 
 
 # General rules and definitions

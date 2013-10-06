@@ -9,7 +9,8 @@
 
 include source.mak
 
-CFLAGS	= -O2 -Wall -DMSDOS
+##CFLAGS	= -O2 -Wall -DMSDOS
+CFLAGS	= -O2 -Wall -DMSDOS -DSUPPORT_MBCS_JA_COMMENT
 
 ctags.exe: $(SOURCES)
 	gcc $(CFLAGS) -s -o ctags.exe $(SOURCES) -lpc

@@ -61,6 +61,9 @@
 #endif
 #include "debug.h"
 #include "routines.h"
+#ifdef SUPPORT_MBCS_JA_COMMENT
+# include "mbcs_ja.h"
+#endif
 
 /*
 *   MACROS
@@ -574,10 +577,24 @@ extern const char *baseFilename (const char *const filePath)
 	 */
 	for (i = 0  ;  i < strlen (PathDelimiters)  ;  ++i)
 	{
+#ifndef SUPPORT_MBCS_JA_COMMENT
 		const char *sep = strrchr (filePath, PathDelimiters [i]);
 
 		if (sep > tail)
 			tail = sep;
+#else
+		const char *p;
+		int mblen;
+
+		for (p = filePath  ;  *p != '\0'  ;  ++p)
+		{
+			mblen = mbcs_lead_byte(*p);
+			if (mblen)
+				p += mblen - 1;
+			else if (*p == PathDelimiters [i] && p > tail)
+				tail = p;
+		}
+#endif
 	}
 #else
 	const char *tail = strrchr (filePath, PATH_SEPARATOR);

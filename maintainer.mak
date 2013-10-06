@@ -19,7 +19,7 @@ ENVIRONMENT_MAKEFILES := \
 				mk_bc3.mak mk_bc5.mak mk_djg.mak mk_manx.mak mk_mingw.mak \
 				mk_mpw.mak mk_mvc.mak mk_os2.mak mk_qdos.mak mk_sas.mak \
 
-COMMON_FILES := COPYING EXTENDING.html FAQ INSTALL.oth MAINTAINERS NEWS README \
+COMMON_FILES := COPYING EXTENDING.html FAQ INSTALL.oth MAINTAINERS NEWS README README_ja.txt \
 				$(ENVIRONMENT_MAKEFILES) source.mak \
 				$(DSOURCES) $(HEADERS) $(LIB_FILES) \
 				$(ENVIRONMENT_SOURCES) $(ENVIRONMENT_HEADERS)
@@ -28,7 +28,7 @@ UNIX_FILES   := $(COMMON_FILES) \
 				.indent.pro INSTALL configure.ac \
 				Makefile.in maintainer.mak \
 				descrip.mms mkinstalldirs magic.diff \
-				ctags.spec ctags.1
+				ctags.spec ctags.1 ctags_ja.html
 
 REGEX_DIR    := gnu_regex
 
@@ -159,7 +159,8 @@ profclean:
 gcovclean:
 	rm -f $(COV_GEN)
 
-clean: depclean profclean gcovclean clean-test
+#clean: depclean profclean gcovclean clean-test
+clean: depclean profclean gcovclean
 	rm -f *.[ois] *.o[dm] ctags dctags ctags*.exe readtags etyperef \
 		ctags.man ctags.html ctags.prof ctags.cov *.bb *.bbg tags TAGS syntax.vim
 
@@ -306,12 +307,13 @@ $(WINDOWS_DIR)/ctags$(win_version): \
 	rm -fr "$(WINDOWS_DIR)/ctags$(win_version)"
 	mkdir -p "$(WINDOWS_DIR)/ctags$(win_version)"
 	for file in $(WIN_FILES) ctags.html; do \
-		$(UNIX2DOS) < "$(RELEASE_DIR)/dirs/ctags-$(version)/$${file}" > $@/$${file} ;\
+		nkf -s $${file} | $(UNIX2DOS) < "$(RELEASE_DIR)/dirs/ctags-$(version)/$${file}" > $@/$${file} ;\
 	done
 	mkdir $@/$(REGEX_DIR)
 	for file in $(REGEX_DIR)/*; do \
 		$(UNIX2DOS) < "$${file}" > $@/$(REGEX_DIR)/`basename $${file}` ;\
 	done
+	cp -p ctags_ja.html "$(WINDOWS_DIR)/ctags$(win_version)"
 	chmod 644 $@/*
 	chmod 755 $@/$(REGEX_DIR)
 	chmod 644 $@/$(REGEX_DIR)/*
