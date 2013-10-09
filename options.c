@@ -143,7 +143,7 @@ optionValues Option = {
 #ifdef SUPPORT_MBCS_JA_COMMENT
 # if defined(WIN32) || defined(MSDOS) || defined(OS2) || defined(__CYGWIN__) || defined(__MACINTOSH__)
     JCODE_SJIS,		/* --jcode */
-# else	// defined(__linux__) || defined(__APPLE_CC__)
+# else	/* defined(__linux__) || defined(__APPLE_CC__) */
     JCODE_UTF8,		/* --jcode */
 # endif
 #endif
@@ -239,7 +239,7 @@ static optionDescription LongOptionDescription [] = {
  {1,"  --jcode=ascii|sjis|euc|utf8"},
 # if defined(WIN32) || defined(MSDOS) || defined(OS2) || defined(__CYGWIN__) || defined(__MACINTOSH__)
  {1,"       Specify Japanese multibyte character set [sjis]."},
-# else	// defined(__linux__) || defined(__APPLE_CC__)
+# else	/* defined(__linux__) || defined(__APPLE_CC__) */
  {1,"       Specify Japanese multibyte character set [utf8]."},
 # endif
 #endif
