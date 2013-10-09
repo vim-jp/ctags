@@ -1233,7 +1233,6 @@ static void parseLabel (tokenInfo *const token)
 
 static void parseStatements (tokenInfo *const token, const boolean exit_on_endif )
 {
-	boolean isAnsi   = TRUE;
 	boolean stmtTerm = FALSE;
 	do
 	{
@@ -1311,7 +1310,6 @@ static void parseStatements (tokenInfo *const token, const boolean exit_on_endif
 
 					if( isKeyword (token, KEYWORD_begin ) )
 					{
-						isAnsi = FALSE;
 						parseBlock(token, FALSE);
 
 						/*
