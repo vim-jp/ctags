@@ -63,7 +63,7 @@
 #  undef HAVE_FGETPOS
 #  define NEED_PROTO_FGETPOS 1
 # endif
-# define HAVE_DIR_H 1
+# define HAVE_IO_H 1
 # define HAVE_DIRENT_H 1
 # define HAVE__FINDFIRST 1
 # define findfirst_t long
