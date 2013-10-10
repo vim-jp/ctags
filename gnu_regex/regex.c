@@ -58,6 +58,12 @@
 
 /* This header defines the MIN and MAX macros.  */
 #include <sys/param.h>
+#ifndef MAX
+# define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+#ifndef MIN
+# define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
 
 #include "regex.h"
 #include "regex_internal.h"

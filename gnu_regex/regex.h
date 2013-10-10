@@ -578,4 +578,6 @@ extern void regfree (regex_t *__preg);
 }
 #endif	/* C++ */
 
+#define __attribute_warn_unused_result__ /* empty */
+
 #endif /* regex.h */

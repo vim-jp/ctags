@@ -928,7 +928,7 @@ internal_function
 init_word_char (re_dfa_t *dfa)
 {
   dfa->word_ops_used = 1;
-  int i = 0;
+  int i = 0, j;
   int ch = 0;
   if (BE (dfa->map_notascii == 0, 1))
     {
@@ -962,7 +962,7 @@ init_word_char (re_dfa_t *dfa)
     }
 
   for (; i < BITSET_WORDS; ++i)
-    for (int j = 0; j < BITSET_WORD_BITS; ++j, ++ch)
+    for (j = 0; j < BITSET_WORD_BITS; ++j, ++ch)
       if (isalnum (ch) || ch == '_')
 	dfa->word_char[i] |= (bitset_word_t) 1 << j;
 }
