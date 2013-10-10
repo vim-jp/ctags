@@ -1,5 +1,5 @@
-These source files were taken from the GNU glibc-2.10.1 package.
+These source files were taken from the GNU glibc-2.18 package.
 
-    ftp://ftp.gnu.org/gnu/glibc/glibc-2.10.1.tar.bz2
+    ftp://ftp.gnu.org/gnu/glibc/glibc-2.18.tar.bz2
 
 Minor changes were made to eliminate compiler errors and warnings.
