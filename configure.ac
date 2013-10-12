@@ -62,6 +62,8 @@ AH_VERBATIM([EXTERNAL_SORT], [
 AH_TEMPLATE([SUPPORT_MBCS_JA_COMMENT],
 	[Define this value support mbcs(multibyte character set) ja. You can use
 	--jcode option.])
+AH_TEMPLATE([SUPPORT_MULTIBYTE],
+	[Define this value support mbcs(multibyte character set).])
 AH_TEMPLATE([TMPDIR],
 	[If you wish to change the directory in which temporary files are stored,
 	define this label to the directory desired.])
@@ -169,6 +171,11 @@ AC_ARG_ENABLE(support-mbcs-ja-comment,
                           disable support mbcs(multibyte character set) ja
                           comment],
 	[],AC_DEFINE(SUPPORT_MBCS_JA_COMMENT))
+
+AC_ARG_ENABLE(multibyte,
+[  --disable-multibyte
+                          disable support mbcs(multibyte character set)],
+	[],AC_DEFINE(SUPPORT_MULTIBYTE))
 
 AC_ARG_ENABLE(custom-config,
 [  --enable-custom-config=FILE
@@ -334,7 +341,7 @@ fi
 # -----------------------
 
 AC_CHECK_HEADERS_ONCE([dirent.h fcntl.h fnmatch.h stat.h stdlib.h string.h])
-AC_CHECK_HEADERS_ONCE([time.h types.h unistd.h])
+AC_CHECK_HEADERS_ONCE([time.h types.h unistd.h locale.h])
 AC_CHECK_HEADERS_ONCE([sys/dir.h sys/stat.h sys/times.h sys/types.h])
 
 
