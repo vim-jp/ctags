@@ -56,13 +56,12 @@
    #undefs RE_DUP_MAX and sets it to the right value.  */
 #include <limits.h>
 
-/* This header defines the MIN and MAX macros.  */
-#include <sys/param.h>
-#ifndef MAX
+#ifdef WIN32
 # define MAX(a,b) (((a)>(b))?(a):(b))
-#endif
-#ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
+#else
+  /* This header defines the MIN and MAX macros.  */
+# include <sys/param.h>
 #endif
 
 #include "regex.h"
