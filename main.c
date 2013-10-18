@@ -299,7 +299,7 @@ static boolean createTagsForEntry (const char *const entryName)
 		resize = recurseIntoDirectory (entryName);
 	else if (! status->isNormalFile)
 		verbose ("ignoring \"%s\" (special file)\n", entryName);
-	else
+	else if (status->size)
 		resize = parseFile (entryName);
 
 	eStatFree (status);
