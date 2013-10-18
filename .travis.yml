@@ -1,0 +1,11 @@
+language: c
+compiler:
+  - clang
+  - gcc
+script:
+  - autoheader
+  - autoconf
+  - ./configure --enable-maintainer-mode
+  - make
+  - cp ./dctags ctags.ref
+  - make test CTAGS_TEST=./dctags
