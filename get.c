@@ -494,9 +494,10 @@ static int skipOverCplusComment (void)
 		mblen = mbcs_lead_byte(c);
 		if (mblen)
 		{
-			for (ki = 0; ki < mblen-1; ki++)
-				fileGetc();
-			continue;
+			for (ki = 0; ki < mblen-1 && c != NEWLINE; ki++)
+				c = fileGetc();
+			if (c != NEWLINE)
+				continue;
 		}
 #endif
 		if (c == BACKSLASH)
@@ -556,9 +557,10 @@ static int skipToEndOfChar (void)
 		mblen = mbcs_lead_byte(c);
 		if (mblen)
 		{
-			for (ki = 0; ki < mblen-1; ki++)
-				fileGetc();
-			continue;
+			for (ki = 0; ki < mblen-1 && c != NEWLINE; ki++)
+				c = fileGetc();
+			if (c != NEWLINE)
+				continue;
 		}
 #endif
 	    ++count;
