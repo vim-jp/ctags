@@ -919,6 +919,21 @@ static void processJcodeOption(const char *const option,
 			break;
 	}
 }
+
+static boolean processLanguageJcodeOption (const char *const option,
+								   const char *const parameter __unused__)
+{
+	boolean handled = FALSE;
+	const char* const dash = strchr (option, '-');
+	if (dash != NULL  &&  strncmp (option, "jcode", dash - option) == 0)
+	{
+		if (Option.jcodeList == NULL)
+			Option.jcodeList = stringListNew ();
+		addExtensionList (Option.jcodeList, dash + 1, FALSE);
+		handled = TRUE;
+	}
+	return handled;
+}
 #endif
 
 static void printInvocationDescription (void)
@@ -1424,7 +1439,7 @@ static parametricOption ParametricOptions [] = {
 	{ "format",                 processFormatOption,            TRUE    },
 	{ "help",                   processHelpOption,              TRUE    },
 #ifdef SUPPORT_MBCS_JA_COMMENT
-	{ "jcode",			processJcodeOption,		FALSE	},
+	{ "jcode",                  processJcodeOption,             FALSE   },
 #endif
 	{ "lang",                   processLanguageForceOption,     FALSE   },
 	{ "language",               processLanguageForceOption,     FALSE   },
@@ -1544,6 +1559,10 @@ static void processLongOption (
 		;
 	else if (processRegexOption (option, parameter))
 		;
+#ifdef SUPPORT_MBCS_JA_COMMENT
+	else if (processLanguageJcodeOption (option, parameter))
+		;
+#endif
 #ifndef RECURSE_SUPPORTED
 	else if (strcmp (option, "recurse") == 0)
 		error (WARNING, "%s option not supported on this host", option);
@@ -1871,6 +1890,9 @@ extern void freeOptionResources (void)
 	freeList (&Option.ignore);
 	freeList (&Option.headerExt);
 	freeList (&Option.etagsInclude);
+#ifdef SUPPORT_MBCS_JA_COMMENT
+	freeList (&Option.jcodeMap);
+#endif
 	freeList (&OptionFiles);
 }
 

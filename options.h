@@ -102,11 +102,12 @@ typedef struct sOptionValues {
 	boolean if0;            /* --if0  examine code within "#if 0" branch */
 #ifdef SUPPORT_MBCS_JA_COMMENT
 	enum eJcode {
-		JCODE_ASCII,		/* ASCII ode */
-		JCODE_SJIS,			/* Shift JIS code */
-		JCODE_EUC,			/* EUC code */
-		JCODE_UTF8			/* utf-8 code */
-	} jcode;				/* --jcode  japanese multibyte character set */
+		JCODE_ASCII,        /* ASCII ode */
+		JCODE_SJIS,         /* Shift JIS code */
+		JCODE_EUC,          /* EUC code */
+		JCODE_UTF8          /* utf-8 code */
+	} jcode;                /* --jcode  japanese multibyte character set */
+	stringList* jcodeMap;   /* --jcode-<lang> jcode for the language */
 #endif
 	boolean kindLong;       /* --kind-long */
 	langType language;      /* --lang specified language override */
