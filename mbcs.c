@@ -33,16 +33,15 @@ extern boolean openConverter (char* encoding)
 
 extern boolean convertString (vString *const string)
 {
-	size_t utf8_len = 0, mbcs_len, utf8_len_old;
+	size_t utf8_len = 0, mbcs_len;
 	char *utf8, *mbcs, *utf8ptr;
 	if (iconv_fd == (iconv_t) -1)
 		return FALSE;
 	mbcs_len = vStringLength (string);
-	utf8_len_old = utf8_len = mbcs_len * 6;
-	utf8 = xMalloc (utf8_len, char);
+	utf8_len = mbcs_len * 4;
+	utf8 = xCalloc (utf8_len, char);
 	if (!utf8)
 		return FALSE;
-	*utf8 = 0;
 	utf8ptr = utf8;
 	mbcs = vStringValue (string);
 	if (iconv (iconv_fd, &mbcs, &mbcs_len, &utf8ptr, &utf8_len) == (size_t) -1)
@@ -50,7 +49,7 @@ extern boolean convertString (vString *const string)
 	  	eFree (utf8);
 		return FALSE;
 	}
-	utf8_len = utf8_len_old - utf8_len;
+	utf8_len = utf8ptr - utf8;
 
 	vStringClear (string);
 	while (vStringSize (string) <= utf8_len + 1)
@@ -58,6 +57,7 @@ extern boolean convertString (vString *const string)
 	strcpy (vStringValue (string), utf8);
 	vStringLength (string) = utf8_len;
   	eFree (utf8);
+
 	return TRUE;
 }
 

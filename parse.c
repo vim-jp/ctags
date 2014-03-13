@@ -667,6 +667,8 @@ static void addLanguageEncoding (const langType language,
 		}
 		EncodingMapMax = language;
 	}
+	if (EncodingMap [language])
+		eFree (EncodingMap [language]);
 	EncodingMap [language] = eStrdup(encoding);
 }
 
@@ -688,9 +690,18 @@ extern boolean processLanguageEncodingOption (const char *const option,
 
 extern void freeEncodingResources (void)
 {
-	free(EncodingMap);
+	if (EncodingMap)
+	{
+		int i;
+		for (i = 0  ;  i < EncodingMapMax  ; ++i)
+		{
+			if (EncodingMap [i])
+				eFree (EncodingMap [i]);
+		}
+		free(EncodingMap);
+	}
 	if (Option.encoding)
-		free(Option.encoding);
+		eFree (Option.encoding);
 }
 #endif
 
@@ -711,7 +722,7 @@ extern boolean parseFile (const char *const fileName)
 			openTagFile ();
 
 #ifdef SUPPORT_MULTIBYTE
-		openConverter (EncodingMap [language] ?
+		openConverter (language <= EncodingMapMax ?
 				EncodingMap [language] : Option.encoding);
 #endif
 

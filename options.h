@@ -151,6 +151,9 @@ extern void previewFirstOption (cookedArgs* const cargs);
 extern void readOptionConfiguration (void);
 extern void initOptions (void);
 extern void freeOptionResources (void);
+#ifdef SUPPORT_MULTIBYTE
+extern void freeEncodingResources (void);
+#endif
 
 #endif  /* _OPTIONS_H */
 

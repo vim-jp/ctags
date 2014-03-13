@@ -141,7 +141,7 @@ optionValues Option = {
 	DEFAULT_FILE_FORMAT,/* --format */
 	FALSE,      /* --if0 */
 #ifdef SUPPORT_MULTIBYTE
-	"UTF-8",
+	NULL,
 #endif
 	FALSE,      /* --kind-long */
 	LANG_AUTO,  /* --lang */
@@ -233,7 +233,7 @@ static optionDescription LongOptionDescription [] = {
  {1,"       Should C code within #if 0 conditional branches be parsed [no]?"},
 #ifdef SUPPORT_MULTIBYTE
  {1,"  --encoding=utf8"},
- {1,"       Specify source encoding [utf8]."},
+ {1,"       Specify source encoding."},
 #endif
  {1,"  --<LANG>-kinds=[+|-]kinds"},
  {1,"       Enable/disable tag kinds for language <LANG>."},
@@ -900,6 +900,8 @@ static void processFormatOption (
 static void processEncodingOption(const char *const option,
 				const char *const parameter)
 {
+	if (Option.encoding)
+		eFree (Option.encoding);
 	Option.encoding = eStrdup(parameter);
 }
 #endif
@@ -1859,9 +1861,6 @@ extern void freeOptionResources (void)
 	freeList (&Option.headerExt);
 	freeList (&Option.etagsInclude);
 	freeList (&OptionFiles);
-#ifdef SUPPORT_MULTIBYTE
-	freeEncodingResources ();
-#endif
 }
 
 /* vi:set tabstop=4 shiftwidth=4: */
