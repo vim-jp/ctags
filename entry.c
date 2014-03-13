@@ -162,15 +162,8 @@ static void addPseudoTags (void)
 		writePseudoTag ("TAG_PROGRAM_AUTHOR",  AUTHOR_NAME,  AUTHOR_EMAIL);
 		writePseudoTag ("TAG_PROGRAM_NAME",    PROGRAM_NAME, "");
 		writePseudoTag ("TAG_PROGRAM_URL",     PROGRAM_URL,  "official site");
-#ifndef SUPPORT_MULTIBYTE
 		writePseudoTag ("TAG_PROGRAM_VERSION", PROGRAM_VERSION, "");
-#else
-		writePseudoTag ("TAG_PROGRAM_JP_AUTHOR",
-					JP_AUTHOR_NAME, JP_AUTHOR_TWITTER);
-		writePseudoTag ("TAG_PROGRAM_JP_URL",	JP_AUTHOR_URL, "");
-		writePseudoTag ("TAG_PROGRAM_VERSION",
-					PROGRAM_VERSION PROGRAM_JP_VERSION, "");
-
+#ifdef HAVE_ICONV
 		if (Option.encoding)
 			writePseudoTag ("TAG_FILE_ENCODING", "utf-8", "");
 #endif

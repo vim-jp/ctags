@@ -26,7 +26,7 @@
 #include "read.h"
 #include "routines.h"
 #include "vstring.h"
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 # include "mbcs.h"
 #endif
 
@@ -650,7 +650,7 @@ static boolean createTagsWithFallback (
 	return tagFileResized;
 }
 
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 static char **EncodingMap;
 static unsigned int EncodingMapMax;
 
@@ -721,7 +721,7 @@ extern boolean parseFile (const char *const fileName)
 		if (Option.filter)
 			openTagFile ();
 
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 		openConverter (language <= EncodingMapMax ?
 				EncodingMap [language] : Option.encoding);
 #endif
@@ -732,7 +732,7 @@ extern boolean parseFile (const char *const fileName)
 			closeTagFile (tagFileResized);
 		addTotals (1, 0L, 0L);
 
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 		closeConverter ();
 #endif
 

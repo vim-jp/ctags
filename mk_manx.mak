@@ -57,7 +57,7 @@ LN_DEBUG =
 #LN_DEBUG = -g
 
 ##CFLAGS = $(OPTIONS) -wapruq -ps -qf -DAMIGA -Dconst=
-CFLAGS = $(OPTIONS) -wapruq -ps -qf -DAMIGA -Dconst= -DSUPPORT_MULTIBYTE
+CFLAGS = $(OPTIONS) -wapruq -ps -qf -DAMIGA -Dconst= -DHAVE_ICONV
 
 Ctags: $(OBJECTS)
 	ln +q -m $(LN_DEBUG) -o Ctags $(OBJECTS) -lc16 -lm16

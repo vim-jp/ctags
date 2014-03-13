@@ -68,7 +68,7 @@
 #endif
 #include "debug.h"
 #include "routines.h"
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 # include "mbcs.h"
 #endif
 
@@ -584,12 +584,7 @@ extern const char *baseFilename (const char *const filePath)
 	 */
 	for (i = 0  ;  i < strlen (PathDelimiters)  ;  ++i)
 	{
-#ifndef SUPPORT_MULTIBYTE
-		const char *sep = strrchr (filePath, PathDelimiters [i]);
-
-		if (sep > tail)
-			tail = sep;
-#else
+#ifdef HAVE_MBLEN
 		const char *p;
 		int ml;
 
@@ -601,6 +596,11 @@ extern const char *baseFilename (const char *const filePath)
 			else if (*p == PathDelimiters [i] && p > tail)
 				tail = p;
 		}
+#else
+		const char *sep = strrchr (filePath, PathDelimiters [i]);
+
+		if (sep > tail)
+			tail = sep;
 #endif
 	}
 #else

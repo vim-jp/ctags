@@ -571,7 +571,7 @@ extern int main (int __unused__ argc, char **argv)
 	freeOptionResources ();
 	freeParserResources ();
 	freeRegexResources ();
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 	freeEncodingResources ();
 #endif
 

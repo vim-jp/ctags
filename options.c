@@ -140,7 +140,7 @@ optionValues Option = {
 	NULL,       /* --etags-include */
 	DEFAULT_FILE_FORMAT,/* --format */
 	FALSE,      /* --if0 */
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 	NULL,
 #endif
 	FALSE,      /* --kind-long */
@@ -231,7 +231,7 @@ static optionDescription LongOptionDescription [] = {
  {1,"       Print this option summary."},
  {1,"  --if0=[yes|no]"},
  {1,"       Should C code within #if 0 conditional branches be parsed [no]?"},
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
  {1,"  --encoding=utf8"},
  {1,"       Specify source encoding."},
 #endif
@@ -338,7 +338,7 @@ static const char *const Features [] = {
 #if (defined (MSDOS) || defined (WIN32) || defined (OS2)) && defined (UNIX_PATH_SEPARATOR)
 	"unix-path-separator",
 #endif
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
     "multibyte",
 #endif
 #ifdef DEBUG
@@ -896,7 +896,7 @@ static void processFormatOption (
 		error (FATAL, "Unsupported value for \"%s\" option", option);
 }
 
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 static void processEncodingOption(const char *const option,
 				const char *const parameter)
 {
@@ -941,7 +941,7 @@ static void printFeatureList (void)
 
 static void printProgramIdentification (void)
 {
-#ifndef SUPPORT_MULTIBYTE
+#ifndef HAVE_ICONV
 	printf ("%s %s, %s %s\n",
 	        PROGRAM_NAME, PROGRAM_VERSION,
 	        PROGRAM_COPYRIGHT, AUTHOR_NAME);
@@ -952,7 +952,7 @@ static void printProgramIdentification (void)
 #endif
 	printf ("  Compiled: %s, %s\n", __DATE__, __TIME__);
 	printf ("  Addresses: <%s>, %s\n", AUTHOR_EMAIL, PROGRAM_URL);
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
     printf("  Japanese patch  by %s <%s>\n", JP_AUTHOR_NAME, JP_AUTHOR_TWITTER);
     printf("                     %s\n", JP_AUTHOR_URL);
 #endif
@@ -1408,7 +1408,7 @@ static parametricOption ParametricOptions [] = {
 	{ "filter-terminator",      processFilterTerminatorOption,  TRUE    },
 	{ "format",                 processFormatOption,            TRUE    },
 	{ "help",                   processHelpOption,              TRUE    },
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 	{ "encoding",               processEncodingOption,          FALSE   },
 #endif
 	{ "lang",                   processLanguageForceOption,     FALSE   },
@@ -1529,7 +1529,7 @@ static void processLongOption (
 		;
 	else if (processRegexOption (option, parameter))
 		;
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 	else if (processLanguageEncodingOption (option, parameter))
 		;
 #endif

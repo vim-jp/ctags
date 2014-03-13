@@ -13,7 +13,7 @@
 *   INCLUDE FILES
 */
 
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 
 #include <stdio.h>
 #include <iconv.h>
@@ -87,4 +87,4 @@ extern void closeConverter ()
 	}
 }
 
-#endif	/* SUPPORT_MULTIBYTE */
+#endif	/* HAVE_ICONV */

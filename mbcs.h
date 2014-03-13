@@ -11,11 +11,11 @@
 
 #include "vstring.h"
 
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 
 extern boolean isConverting ();
 extern boolean openConverter (char*);
 extern boolean convertString (vString *const);
 extern void closeConverter ();
 
-#endif /* SUPPORT_MULTIBYTE */
+#endif /* HAVE_ICONV */

@@ -164,7 +164,7 @@ AC_ARG_ENABLE(external-sort,
 [  --disable-external-sort use internal sort algorithm instead of sort program])
 
 AC_ARG_ENABLE(multibyte,
-[  --enable-multibyte
+[  --disable-multibyte
                           disable multibyte character encoding],
 	[],AC_DEFINE(SUPPORT_MULTIBYTE))
 
@@ -212,13 +212,6 @@ else
 	AC_MSG_RESULT(no)
 fi
 AC_SUBST(install_targets)
-
-if test yes = "$enable_multibyte"; then
-	AC_MSG_RESULT(yes)
-	AM_ICONV()
-else
-	AC_MSG_RESULT(no)
-fi
 
 if test "$enable_custom_config" = no -o "$enable_custom_config" = yes ; then
 	AC_MSG_RESULT(no name supplied for custom configuration file)

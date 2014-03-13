@@ -100,7 +100,7 @@ typedef struct sOptionValues {
 	stringList* etagsInclude;/* --etags-include  list of TAGS files to include*/
 	unsigned int tagFileFormat;/* --format  tag file format (level) */
 	boolean if0;            /* --if0  examine code within "#if 0" branch */
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
     char *encoding;
 #endif
 	boolean kindLong;       /* --kind-long */
@@ -151,7 +151,7 @@ extern void previewFirstOption (cookedArgs* const cargs);
 extern void readOptionConfiguration (void);
 extern void initOptions (void);
 extern void freeOptionResources (void);
-#ifdef SUPPORT_MULTIBYTE
+#ifdef HAVE_ICONV
 extern void freeEncodingResources (void);
 #endif
 

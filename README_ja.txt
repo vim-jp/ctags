@@ -25,7 +25,7 @@ Exuberant Ctags 日本語対応版 x.xJ1
             cp932を指定した場合
                 !_TAG_FILE_ENCODING	cp932	//
 
-  ※コンパイルオプション -DSUPPORT_MULTIBYTE
+  ※コンパイルオプション -DHAVE_ICONV
     を定義すると上記パッチが有効になります。
     定義しなければオリジナルと同じ動作になります。
     （配布時は定義された状態になっています）
