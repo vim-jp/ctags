@@ -9,6 +9,7 @@
 *   This module contains functions for checking multibyte character set.
 */
 
+#include "general.h"  /* must always come first */
 #include "vstring.h"
 
 #ifdef HAVE_ICONV

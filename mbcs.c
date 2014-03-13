@@ -12,14 +12,16 @@
 /*
 *   INCLUDE FILES
 */
+#include "general.h"  /* must always come first */
 
 #ifdef HAVE_ICONV
 
 #include <stdio.h>
+#include <string.h>
 #include <iconv.h>
-#include "options.h"
-#include "routines.h"
+#include <errno.h>
 #include "mbcs.h"
+#include "routines.h"
 
 static iconv_t iconv_fd = (iconv_t) -1;
 

@@ -941,21 +941,11 @@ static void printFeatureList (void)
 
 static void printProgramIdentification (void)
 {
-#ifndef HAVE_ICONV
 	printf ("%s %s, %s %s\n",
 	        PROGRAM_NAME, PROGRAM_VERSION,
 	        PROGRAM_COPYRIGHT, AUTHOR_NAME);
-#else
-	printf ("%s %s%s, %s %s\n",
-	        PROGRAM_NAME, PROGRAM_VERSION, PROGRAM_JP_VERSION,
-	        PROGRAM_COPYRIGHT, AUTHOR_NAME);
-#endif
 	printf ("  Compiled: %s, %s\n", __DATE__, __TIME__);
 	printf ("  Addresses: <%s>, %s\n", AUTHOR_EMAIL, PROGRAM_URL);
-#ifdef HAVE_ICONV
-    printf("  Japanese patch  by %s <%s>\n", JP_AUTHOR_NAME, JP_AUTHOR_TWITTER);
-    printf("                     %s\n", JP_AUTHOR_URL);
-#endif
 	printFeatureList ();
 }
 

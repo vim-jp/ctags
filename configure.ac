@@ -165,8 +165,7 @@ AC_ARG_ENABLE(external-sort,
 
 AC_ARG_ENABLE(iconv,
 [  --enable-iconv
-                          support multibyte character encoding],
-	AC_DEFINE(ICONV))
+                          support multibyte character encoding])
 
 AC_ARG_ENABLE(custom-config,
 [  --enable-custom-config=FILE
@@ -234,6 +233,10 @@ if test "$enable_iconv" = yes ; then
 	if test "x$HAVE_ICONV" = "x"; then
 		dnl No iconv library was found; issue a warning to the console
 		AC_MSG_ERROR([Could not find libiconv. Please install libiconv and libiconv-devel.])
+	fi
+	if test "x$HAVE_ICONV" != "x"; then
+		AC_DEFINE(HAVE_ICONV)
+		AC_DEFINE(MBCS_CODE,[])
 	fi
 fi
 
