@@ -12,6 +12,7 @@
 /*
 *   INCLUDE FILES
 */
+#define __GNUG__
 #include "general.h"  /* must always come first */
 
 #ifdef HAVE_ICONV
@@ -20,6 +21,7 @@
 #include <string.h>
 #include <iconv.h>
 #include <errno.h>
+#include "options.h"
 #include "mbcs.h"
 #include "routines.h"
 
@@ -75,7 +77,7 @@ retry:
 	vStringLength (string) = utf8_size;
   	eFree (utf8);
 
-	iconv (iconv_fd, NULL, NULL, &utf8ptr, &utf8_len);
+	iconv (iconv_fd, (void*)0, (void*)0, &utf8ptr, &utf8_len);
 
 	return TRUE;
 }

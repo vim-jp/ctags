@@ -5,8 +5,7 @@
 
 include source.mak
 
-#REGEX_DEFINES = -DHAVE_REGCOMP -D__USE_GNU -Dbool=int -Dfalse=0 -Dtrue=1 -Dstrcasecmp=stricmp
-REGEX_DEFINES = -DHAVE_REGCOMP -Dstrcasecmp=stricmp
+REGEX_DEFINES = -DHAVE_REGCOMP -D__USE_GNU -Dbool=int -Dfalse=0 -Dtrue=1 -Dstrcasecmp=stricmp
 
 CFLAGS = -Wall
 ##DEFINES = -DWIN32 $(REGEX_DEFINES)
@@ -28,7 +27,7 @@ dctags.exe: SOURCES += debug.c
 
 ctags: ctags.exe
 
-ctags.exe dctags.exe: $(OBJECTS) $(HEADERS) $(REGEX_HEADERS)
+ctags.exe dctags.exe: $(OBJECTS) $(HEADERS) $(REGEX_HEADERS) $(REGEX_SOURCES:%.c=%.o)
 	$(CC) $(OPT) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $(OBJECTS) $(REGEX_SOURCES:%.c=%.o) $(LDFLAGS)
 
 readtags.exe: readtags.c
