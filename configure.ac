@@ -59,7 +59,7 @@ AH_VERBATIM([EXTERNAL_SORT], [
 # undef EXTERNAL_SORT
 #endif
 ])
-AH_TEMPLATE([ICONV],
+AH_TEMPLATE([HAVE_ICONV],
 	[Define this value if support multibyte character encoding.])
 AH_TEMPLATE([TMPDIR],
 	[If you wish to change the directory in which temporary files are stored,
@@ -235,8 +235,7 @@ if test "$enable_iconv" = yes ; then
 		AC_MSG_ERROR([Could not find libiconv. Please install libiconv and libiconv-devel.])
 	fi
 	if test "x$HAVE_ICONV" != "x"; then
-		AC_DEFINE(HAVE_ICONV)
-		AC_DEFINE(MBCS_CODE,[])
+		AC_DEFINE([HAVE_ICONV],[],[])
 	fi
 fi
 
