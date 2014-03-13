@@ -25,6 +25,9 @@
 #include "main.h"
 #include "routines.h"
 #include "options.h"
+#ifdef SUPPORT_MULTIBYTE
+# include "mbcs.h"
+#endif
 
 /*
 *   DATA DEFINITIONS
@@ -535,6 +538,11 @@ extern char *readLine (vString *const vLine, FILE *const fp)
 				}
 			}
 		} while (reReadLine);
+
+#ifdef SUPPORT_MULTIBYTE
+		if (Option.encoding)
+			convertString (vLine);
+#endif
 	}
 	return result;
 }

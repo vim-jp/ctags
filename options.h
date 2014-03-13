@@ -100,14 +100,8 @@ typedef struct sOptionValues {
 	stringList* etagsInclude;/* --etags-include  list of TAGS files to include*/
 	unsigned int tagFileFormat;/* --format  tag file format (level) */
 	boolean if0;            /* --if0  examine code within "#if 0" branch */
-#ifdef SUPPORT_MBCS_JA_COMMENT
-	enum eJcode {
-		JCODE_ASCII,        /* ASCII ode */
-		JCODE_SJIS,         /* Shift JIS code */
-		JCODE_EUC,          /* EUC code */
-		JCODE_UTF8          /* utf-8 code */
-	} jcode;                /* --jcode  japanese multibyte character set */
-	stringList* jcodeMap;   /* --jcode-<lang> jcode for the language */
+#ifdef SUPPORT_MULTIBYTE
+    char *encoding;
 #endif
 	boolean kindLong;       /* --kind-long */
 	langType language;      /* --lang specified language override */

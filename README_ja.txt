@@ -15,21 +15,17 @@ Exuberant Ctags 日本語対応版 x.xJ1
     た。
 
   ・以下のコマンドラインオプションを追加しました。
-    --jcode=ascii|sjis|euc|utf8
-        日本語文字コードを指定する。
-        デフォルトはUNIX系(cygwin除く)が utf8 でその他は sjis です。
+    --encoding=[エンコーディング]
+        ソースファイルのエンコーディングを指定する。
+        デフォルトは utf-8 です。
         ascii を指定した場合はオリジナルと同じ動作になります。
 
-        sjis, euc, utf8 を指定した場合は出力するタグファイルのヘッダにエンコー
+        ascii 以外を指定した場合は出力するタグファイルのヘッダにエンコー
         ド情報(_TAG_FILE_ENCODING)が付加されます。
-            sjisを指定した場合
+            cp932を指定した場合
                 !_TAG_FILE_ENCODING	cp932	//
-            eucを指定した場合
-                !_TAG_FILE_ENCODING	euc-jp	//
-            utf8を指定した場合
-                !_TAG_FILE_ENCODING	utf-8	//
 
-  ※コンパイルオプション -DSUPPORT_MBCS_JA_COMMENT
+  ※コンパイルオプション -DSUPPORT_MULTIBYTE
     を定義すると上記パッチが有効になります。
     定義しなければオリジナルと同じ動作になります。
     （配布時は定義された状態になっています）
@@ -44,10 +40,10 @@ Exuberant Ctags 日本語対応版 x.xJ1
         ●注意●旧バージョン(5.4J2)のものです。
     README_ja.txt
         このファイルです。
-    mbcs_ja.c
-    mbcs_ja.h
-        日本語判定のための定義/関数が記述されているCソース/ヘッダファイルで
-        す。
+    mbcs.c
+    mbcs.h
+        マルチバイト処理のための定義/関数が記述されているCソース/ヘッダファイ
+        ルです。
 
 ctagsとは？
     ctagsは、テキストエディタやその他のユーティリティで (プログラミング言語で
@@ -89,7 +85,7 @@ ctagsとは？
     Password:
     # make install
 
-    ※ ./configure --disable-support-mbcs-ja-comment
+    ※ ./configure --disable-multibyte
       で日本語対応機能を無効にできます。
 
 アンインストール方法（for Windows）
@@ -139,6 +135,9 @@ ctagsとは？
     ctagsマニュアルの翻訳をしてくださった寺田隆平さん、ありがとうございます。
 
 変更履歴
+    ctags5.9I18N      (2014/xx/xx)
+        ・iconvを使い日本語以外のエンコーディングに対応。
+
     ctags5.9J1      (2013/xx/xx)
         ・本家からforkしてvim-jp下で独自メンテナンス開始。
 

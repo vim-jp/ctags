@@ -26,6 +26,9 @@
 #include "read.h"
 #include "routines.h"
 #include "vstring.h"
+#ifdef SUPPORT_MULTIBYTE
+# include "mbcs.h"
+#endif
 
 /*
 *   DATA DEFINITIONS
@@ -647,6 +650,50 @@ static boolean createTagsWithFallback (
 	return tagFileResized;
 }
 
+#ifdef SUPPORT_MULTIBYTE
+static const char **EncodingMap;
+static unsigned int EncodingMapMax;
+
+static void addLanguageEncoding (const langType language,
+									const char *const encoding __unused__)
+{
+	if (language > EncodingMapMax)
+	{
+		int i;
+		EncodingMap = xRealloc (EncodingMap, (language + 1), const char*);
+		for (i = EncodingMapMax + 1  ;  i <= language  ;  ++i)
+		{
+			EncodingMap [i] = NULL;
+		}
+		EncodingMapMax = language;
+	}
+	EncodingMap [language] = eStrdup(encoding);
+}
+
+extern boolean processLanguageEncodingOption (const char *const option,
+									const char *const parameter __unused__)
+{
+	langType language;
+	const char* const dash = strchr (option, '-');
+	if (dash == NULL  ||  strncmp (option, "encoding", dash - option) != 0)
+		return FALSE;
+
+	language = getNamedLanguage (dash + 1);
+	if (language == LANG_IGNORE)
+		return FALSE;
+
+	addLanguageEncoding (language, parameter);
+	return TRUE;
+}
+
+extern void freeEncodingResources (void)
+{
+	free(EncodingMap);
+	if (Option.encoding)
+		free(Option.encoding);
+}
+#endif
+
 extern boolean parseFile (const char *const fileName)
 {
 	boolean tagFileResized = FALSE;
@@ -663,11 +710,19 @@ extern boolean parseFile (const char *const fileName)
 		if (Option.filter)
 			openTagFile ();
 
+#ifdef SUPPORT_MULTIBYTE
+		openConverter (Option.encoding);
+#endif
+
 		tagFileResized = createTagsWithFallback (fileName, language);
 
 		if (Option.filter)
 			closeTagFile (tagFileResized);
 		addTotals (1, 0L, 0L);
+
+#ifdef SUPPORT_MULTIBYTE
+		closeConverter ();
+#endif
 
 		return tagFileResized;
 	}

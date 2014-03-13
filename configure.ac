@@ -59,9 +59,6 @@ AH_VERBATIM([EXTERNAL_SORT], [
 # undef EXTERNAL_SORT
 #endif
 ])
-AH_TEMPLATE([SUPPORT_MBCS_JA_COMMENT],
-	[Define this value support mbcs(multibyte character set) ja. You can use
-	--jcode option.])
 AH_TEMPLATE([SUPPORT_MULTIBYTE],
 	[Define this value support mbcs(multibyte character set).])
 AH_TEMPLATE([TMPDIR],
@@ -165,12 +162,6 @@ AC_ARG_ENABLE(extended-format,
 
 AC_ARG_ENABLE(external-sort,
 [  --disable-external-sort use internal sort algorithm instead of sort program])
-
-AC_ARG_ENABLE(support-mbcs-ja-comment,
-[  --disable-support-mbcs-ja-comment
-                          disable support mbcs(multibyte character set) ja
-                          comment],
-	[],AC_DEFINE(SUPPORT_MBCS_JA_COMMENT))
 
 AC_ARG_ENABLE(multibyte,
 [  --disable-multibyte

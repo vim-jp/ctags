@@ -8,8 +8,13 @@
 *
 *   This module contains functions for checking multibyte character set.
 */
-#ifdef SUPPORT_MBCS_JA_COMMENT
 
-int	mbcs_lead_byte (int);
+#include "vstring.h"
 
-#endif /* SUPPORT_MBCS_JA_COMMENT */
+#ifdef SUPPORT_MULTIBYTE
+
+extern boolean openConverter (char*);
+extern boolean convertString (vString *const);
+extern void closeConverter ();
+
+#endif /* SUPPORT_MULTIBYTE */
