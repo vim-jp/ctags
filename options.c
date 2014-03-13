@@ -140,6 +140,9 @@ optionValues Option = {
 	NULL,       /* --etags-include */
 	DEFAULT_FILE_FORMAT,/* --format */
 	FALSE,      /* --if0 */
+#ifdef HAVE_ICONV
+	NULL,
+#endif
 	FALSE,      /* --kind-long */
 	LANG_AUTO,  /* --lang */
 	TRUE,       /* --links */
@@ -228,6 +231,10 @@ static optionDescription LongOptionDescription [] = {
  {1,"       Print this option summary."},
  {1,"  --if0=[yes|no]"},
  {1,"       Should C code within #if 0 conditional branches be parsed [no]?"},
+#ifdef HAVE_ICONV
+ {1,"  --encoding=utf8"},
+ {1,"       Specify source encoding."},
+#endif
  {1,"  --<LANG>-kinds=[+|-]kinds"},
  {1,"       Enable/disable tag kinds for language <LANG>."},
  {1,"  --langdef=name"},
@@ -330,6 +337,9 @@ static const char *const Features [] = {
 #endif
 #if (defined (MSDOS) || defined (WIN32) || defined (OS2)) && defined (UNIX_PATH_SEPARATOR)
 	"unix-path-separator",
+#endif
+#ifdef HAVE_ICONV
+    "multibyte",
 #endif
 #ifdef DEBUG
 	"debug",
@@ -886,6 +896,16 @@ static void processFormatOption (
 		error (FATAL, "Unsupported value for \"%s\" option", option);
 }
 
+#ifdef HAVE_ICONV
+static void processEncodingOption(const char *const option,
+				const char *const parameter)
+{
+	if (Option.encoding)
+		eFree (Option.encoding);
+	Option.encoding = eStrdup(parameter);
+}
+#endif
+
 static void printInvocationDescription (void)
 {
 	printf (INVOCATION, getExecutableName ());
@@ -1378,6 +1398,9 @@ static parametricOption ParametricOptions [] = {
 	{ "filter-terminator",      processFilterTerminatorOption,  TRUE    },
 	{ "format",                 processFormatOption,            TRUE    },
 	{ "help",                   processHelpOption,              TRUE    },
+#ifdef HAVE_ICONV
+	{ "encoding",               processEncodingOption,          FALSE   },
+#endif
 	{ "lang",                   processLanguageForceOption,     FALSE   },
 	{ "language",               processLanguageForceOption,     FALSE   },
 	{ "language-force",         processLanguageForceOption,     FALSE   },
@@ -1496,6 +1519,10 @@ static void processLongOption (
 		;
 	else if (processRegexOption (option, parameter))
 		;
+#ifdef HAVE_ICONV
+	else if (processLanguageEncodingOption (option, parameter))
+		;
+#endif
 #ifndef RECURSE_SUPPORTED
 	else if (strcmp (option, "recurse") == 0)
 		error (WARNING, "%s option not supported on this host", option);

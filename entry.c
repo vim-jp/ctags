@@ -163,6 +163,10 @@ static void addPseudoTags (void)
 		writePseudoTag ("TAG_PROGRAM_NAME",    PROGRAM_NAME, "");
 		writePseudoTag ("TAG_PROGRAM_URL",     PROGRAM_URL,  "official site");
 		writePseudoTag ("TAG_PROGRAM_VERSION", PROGRAM_VERSION, "");
+#ifdef HAVE_ICONV
+		if (Option.encoding)
+			writePseudoTag ("TAG_FILE_ENCODING", "utf-8", "");
+#endif
 	}
 }
 

@@ -109,6 +109,12 @@ extern void printLanguageKinds (const langType language);
 extern void printLanguageList (void);
 extern boolean parseFile (const char *const fileName);
 
+#ifdef HAVE_ICONV
+extern boolean processLanguageEncodingOption (const char *const option,
+								   const char *const parameter __unused__);
+extern void freeEncodingResources (void);
+#endif
+
 /* Regex interface */
 #ifdef HAVE_REGEX
 extern void findRegexTags (void);

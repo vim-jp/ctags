@@ -59,6 +59,8 @@ AH_VERBATIM([EXTERNAL_SORT], [
 # undef EXTERNAL_SORT
 #endif
 ])
+AH_TEMPLATE([ICONV],
+	[Define this value if support multibyte character encoding.])
 AH_TEMPLATE([TMPDIR],
 	[If you wish to change the directory in which temporary files are stored,
 	define this label to the directory desired.])
@@ -161,6 +163,10 @@ AC_ARG_ENABLE(extended-format,
 AC_ARG_ENABLE(external-sort,
 [  --disable-external-sort use internal sort algorithm instead of sort program])
 
+AC_ARG_ENABLE(iconv,
+[  --enable-iconv
+                          support multibyte character encoding])
+
 AC_ARG_ENABLE(custom-config,
 [  --enable-custom-config=FILE
                           enable custom config file for site-wide defaults])
@@ -216,6 +222,22 @@ fi
 if test "$enable_macro_patterns" = yes ; then
 	AC_DEFINE(MACROS_USE_PATTERNS)
 	AC_MSG_RESULT(tag file will use patterns for macros by default)
+fi
+
+if test "$enable_iconv" = yes ; then
+	AC_CHECK_LIB([c], [iconv_open], [LDFLAGS="$LDFLAGS -lc" HAVE_ICONV=1], [])
+	if test "x$HAVE_ICONV" = "x"; then
+		dnl But it's possible this implementation of libiconv doesn't have a libiconv_* define
+		AC_CHECK_LIB([iconv], [iconv_open], [LDFLAGS="$LDFLAGS -liconv" HAVE_ICONV=1], [])
+	fi
+	if test "x$HAVE_ICONV" = "x"; then
+		dnl No iconv library was found; issue a warning to the console
+		AC_MSG_ERROR([Could not find libiconv. Please install libiconv and libiconv-devel.])
+	fi
+	if test "x$HAVE_ICONV" != "x"; then
+		AC_DEFINE(HAVE_ICONV)
+		AC_DEFINE(MBCS_CODE,[])
+	fi
 fi
 
 # Checks for programs
@@ -325,7 +347,7 @@ fi
 # -----------------------
 
 AC_CHECK_HEADERS_ONCE([dirent.h fcntl.h fnmatch.h stat.h stdlib.h string.h])
-AC_CHECK_HEADERS_ONCE([time.h types.h unistd.h])
+AC_CHECK_HEADERS_ONCE([time.h types.h unistd.h locale.h])
 AC_CHECK_HEADERS_ONCE([sys/dir.h sys/stat.h sys/times.h sys/types.h])
 
 
@@ -482,6 +504,7 @@ fi
 # 	fi
 # fi
 
+AC_CHECK_FUNCS([mblen], [], [HAVE_MBLEN=1], [])
 
 # Checks for missing prototypes
 # -----------------------------

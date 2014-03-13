@@ -571,6 +571,9 @@ extern int main (int __unused__ argc, char **argv)
 	freeOptionResources ();
 	freeParserResources ();
 	freeRegexResources ();
+#ifdef HAVE_ICONV
+	freeEncodingResources ();
+#endif
 
 	exit (0);
 	return 0;

@@ -30,6 +30,13 @@
 # include <unistd.h>  /* to declare mkstemp () */
 #endif
 
+#ifdef HAVE_LIMITS_H
+# include <limits.h>  /* to declare MB_LEN_MAX */
+#endif
+#ifndef MB_LEN_MAX
+# define MB_LEN_MAX 6
+#endif
+
 /*  To declare "struct stat" and stat ().
  */
 #if defined (HAVE_SYS_TYPES_H)
@@ -61,6 +68,9 @@
 #endif
 #include "debug.h"
 #include "routines.h"
+#ifdef HAVE_ICONV
+# include "mbcs.h"
+#endif
 
 /*
 *   MACROS
@@ -574,10 +584,24 @@ extern const char *baseFilename (const char *const filePath)
 	 */
 	for (i = 0  ;  i < strlen (PathDelimiters)  ;  ++i)
 	{
+#ifdef HAVE_MBLEN
+		const char *p;
+		int ml;
+
+		for (p = filePath  ;  *p != '\0'  ;  ++p)
+		{
+			ml = mblen(p, MB_LEN_MAX);
+			if (ml > 1)
+				p += ml - 1;
+			else if (*p == PathDelimiters [i] && p > tail)
+				tail = p;
+		}
+#else
 		const char *sep = strrchr (filePath, PathDelimiters [i]);
 
 		if (sep > tail)
 			tail = sep;
+#endif
 	}
 #else
 	const char *tail = strrchr (filePath, PATH_SEPARATOR);
