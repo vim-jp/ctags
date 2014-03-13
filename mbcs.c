@@ -25,6 +25,8 @@ static iconv_t iconv_fd = (iconv_t) -1;
 
 extern boolean openConverter (char* encoding)
 {
+	if (!encoding)
+		return FALSE;
 	iconv_fd = iconv_open("UTF-8", encoding);
 	return iconv_fd != (iconv_t) -1;
 }

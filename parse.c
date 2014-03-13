@@ -651,7 +651,7 @@ static boolean createTagsWithFallback (
 }
 
 #ifdef SUPPORT_MULTIBYTE
-static const char **EncodingMap;
+static char **EncodingMap;
 static unsigned int EncodingMapMax;
 
 static void addLanguageEncoding (const langType language,
@@ -660,7 +660,7 @@ static void addLanguageEncoding (const langType language,
 	if (language > EncodingMapMax)
 	{
 		int i;
-		EncodingMap = xRealloc (EncodingMap, (language + 1), const char*);
+		EncodingMap = xRealloc (EncodingMap, (language + 1), char*);
 		for (i = EncodingMapMax + 1  ;  i <= language  ;  ++i)
 		{
 			EncodingMap [i] = NULL;
@@ -711,7 +711,8 @@ extern boolean parseFile (const char *const fileName)
 			openTagFile ();
 
 #ifdef SUPPORT_MULTIBYTE
-		openConverter (Option.encoding);
+		openConverter (EncodingMap [language] ?
+				EncodingMap [language] : Option.encoding);
 #endif
 
 		tagFileResized = createTagsWithFallback (fileName, language);
