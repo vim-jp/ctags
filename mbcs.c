@@ -31,6 +31,11 @@ extern boolean openConverter (char* encoding)
 	return iconv_fd != (iconv_t) -1;
 }
 
+extern boolean isConverting ()
+{
+	return iconv_fd != (iconv_t) -1;
+}
+
 extern boolean convertString (vString *const string)
 {
 	size_t utf8_len = 0, mbcs_len, utf8_size;
@@ -43,11 +48,22 @@ extern boolean convertString (vString *const string)
 	if (!utf8)
 		return FALSE;
 	mbcs = vStringValue (string);
+retry:
 	if (iconv (iconv_fd, &mbcs, &mbcs_len, &utf8ptr, &utf8_len) == (size_t) -1)
 	{
 	  	eFree (utf8);
 		return FALSE;
 	}
+	if (errno == EILSEQ)
+	{
+		*utf8ptr++ = '?';
+		utf8_len--;
+		mbcs++;
+		mbcs_len--;
+		verbose ("  Encoding: %s\n", strerror(errno));
+		goto retry;
+	}
+
 	utf8_size = utf8ptr - utf8;
 
 	vStringClear (string);
@@ -65,8 +81,10 @@ extern boolean convertString (vString *const string)
 extern void closeConverter ()
 {
 	if (iconv_fd != (iconv_t) -1)
+	{
 		iconv_close(iconv_fd);
-	iconv_fd = (iconv_t) -1;
+		iconv_fd = (iconv_t) -1;
+	}
 }
 
 #endif	/* SUPPORT_MULTIBYTE */

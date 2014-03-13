@@ -60,7 +60,7 @@ AH_VERBATIM([EXTERNAL_SORT], [
 #endif
 ])
 AH_TEMPLATE([SUPPORT_MULTIBYTE],
-	[Define this value support mbcs(multibyte character set).])
+	[Define this value if support multibyte character encoding.])
 AH_TEMPLATE([TMPDIR],
 	[If you wish to change the directory in which temporary files are stored,
 	define this label to the directory desired.])
@@ -165,7 +165,7 @@ AC_ARG_ENABLE(external-sort,
 
 AC_ARG_ENABLE(multibyte,
 [  --disable-multibyte
-                          disable support mbcs(multibyte character set)],
+                          disable multibyte character encoding],
 	[],AC_DEFINE(SUPPORT_MULTIBYTE))
 
 AC_ARG_ENABLE(custom-config,

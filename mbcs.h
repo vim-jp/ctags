@@ -13,6 +13,7 @@
 
 #ifdef SUPPORT_MULTIBYTE
 
+extern boolean isConverting ();
 extern boolean openConverter (char*);
 extern boolean convertString (vString *const);
 extern void closeConverter ();

@@ -540,7 +540,7 @@ extern char *readLine (vString *const vLine, FILE *const fp)
 		} while (reReadLine);
 
 #ifdef SUPPORT_MULTIBYTE
-		if (Option.encoding)
+		if (isConverting ())
 			convertString (vLine);
 #endif
 	}
