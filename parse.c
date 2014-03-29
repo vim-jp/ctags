@@ -26,6 +26,9 @@
 #include "read.h"
 #include "routines.h"
 #include "vstring.h"
+#ifdef HAVE_ICONV
+# include "mbcs.h"
+#endif
 
 /*
 *   DATA DEFINITIONS
@@ -647,6 +650,61 @@ static boolean createTagsWithFallback (
 	return tagFileResized;
 }
 
+#ifdef HAVE_ICONV
+static char **EncodingMap;
+static unsigned int EncodingMapMax;
+
+static void addLanguageEncoding (const langType language,
+									const char *const encoding __unused__)
+{
+	if (language > EncodingMapMax)
+	{
+		int i;
+		EncodingMap = xRealloc (EncodingMap, (language + 1), char*);
+		for (i = EncodingMapMax + 1  ;  i <= language  ;  ++i)
+		{
+			EncodingMap [i] = NULL;
+		}
+		EncodingMapMax = language;
+	}
+	if (EncodingMap [language])
+		eFree (EncodingMap [language]);
+	EncodingMap [language] = eStrdup(encoding);
+}
+
+extern boolean processLanguageEncodingOption (const char *const option,
+									const char *const parameter __unused__)
+{
+	langType language;
+	const char* const dash = strchr (option, '-');
+	if (dash == NULL  ||  strncmp (option, "encoding", dash - option) != 0)
+		return FALSE;
+
+	language = getNamedLanguage (dash + 1);
+	if (language == LANG_IGNORE)
+		return FALSE;
+
+	addLanguageEncoding (language, parameter);
+	return TRUE;
+}
+
+extern void freeEncodingResources (void)
+{
+	if (EncodingMap)
+	{
+		int i;
+		for (i = 0  ;  i < EncodingMapMax  ; ++i)
+		{
+			if (EncodingMap [i])
+				eFree (EncodingMap [i]);
+		}
+		free(EncodingMap);
+	}
+	if (Option.encoding)
+		eFree (Option.encoding);
+}
+#endif
+
 extern boolean parseFile (const char *const fileName)
 {
 	boolean tagFileResized = FALSE;
@@ -663,11 +721,20 @@ extern boolean parseFile (const char *const fileName)
 		if (Option.filter)
 			openTagFile ();
 
+#ifdef HAVE_ICONV
+		openConverter (language <= EncodingMapMax ?
+				EncodingMap [language] : Option.encoding);
+#endif
+
 		tagFileResized = createTagsWithFallback (fileName, language);
 
 		if (Option.filter)
 			closeTagFile (tagFileResized);
 		addTotals (1, 0L, 0L);
+
+#ifdef HAVE_ICONV
+		closeConverter ();
+#endif
 
 		return tagFileResized;
 	}

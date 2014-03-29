@@ -54,7 +54,7 @@ release:
 # Otherwise use built-in defaults (#ifdef OS2)!
 # DEFINES=-DHAVE_CONFIG_H
 ##DEFINES=-DOS2
-DEFINES=-DOS2 -DSUPPORT_MBCS_JA_COMMENT
+DEFINES=-DOS2 -DHAVE_ICONV
 
 
 # General rules and definitions

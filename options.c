@@ -140,12 +140,8 @@ optionValues Option = {
 	NULL,       /* --etags-include */
 	DEFAULT_FILE_FORMAT,/* --format */
 	FALSE,      /* --if0 */
-#ifdef SUPPORT_MBCS_JA_COMMENT
-# if defined(WIN32) || defined(MSDOS) || defined(OS2) || defined(__CYGWIN__) || defined(__MACINTOSH__)
-    JCODE_SJIS,		/* --jcode */
-# else	/* defined(__linux__) || defined(__APPLE_CC__) */
-    JCODE_UTF8,		/* --jcode */
-# endif
+#ifdef HAVE_ICONV
+	NULL,
 #endif
 	FALSE,      /* --kind-long */
 	LANG_AUTO,  /* --lang */
@@ -235,13 +231,9 @@ static optionDescription LongOptionDescription [] = {
  {1,"       Print this option summary."},
  {1,"  --if0=[yes|no]"},
  {1,"       Should C code within #if 0 conditional branches be parsed [no]?"},
-#ifdef SUPPORT_MBCS_JA_COMMENT
- {1,"  --jcode=ascii|sjis|euc|utf8"},
-# if defined(WIN32) || defined(MSDOS) || defined(OS2) || defined(__CYGWIN__) || defined(__MACINTOSH__)
- {1,"       Specify Japanese multibyte character set [sjis]."},
-# else	/* defined(__linux__) || defined(__APPLE_CC__) */
- {1,"       Specify Japanese multibyte character set [utf8]."},
-# endif
+#ifdef HAVE_ICONV
+ {1,"  --encoding=utf8"},
+ {1,"       Specify source encoding."},
 #endif
  {1,"  --<LANG>-kinds=[+|-]kinds"},
  {1,"       Enable/disable tag kinds for language <LANG>."},
@@ -346,8 +338,8 @@ static const char *const Features [] = {
 #if (defined (MSDOS) || defined (WIN32) || defined (OS2)) && defined (UNIX_PATH_SEPARATOR)
 	"unix-path-separator",
 #endif
-#ifdef SUPPORT_MBCS_JA_COMMENT
-    "mbcs-ja-comment",
+#ifdef HAVE_ICONV
+    "multibyte",
 #endif
 #ifdef DEBUG
 	"debug",
@@ -904,20 +896,13 @@ static void processFormatOption (
 		error (FATAL, "Unsupported value for \"%s\" option", option);
 }
 
-#ifdef SUPPORT_MBCS_JA_COMMENT
-static void processJcodeOption(const char *const option,
+#ifdef HAVE_ICONV
+static void processEncodingOption(const char *const option,
 				const char *const parameter)
 {
-	switch (*parameter)
-	{
-		case 'a':	Option.jcode = JCODE_ASCII;	break;
-		case 's':	Option.jcode = JCODE_SJIS;	break;
-		case 'e':	Option.jcode = JCODE_EUC;	break;
-		case 'u':	Option.jcode = JCODE_UTF8;	break;
-		default:
-			error(FATAL, "Invalid value for \"%s\" option", option);
-			break;
-	}
+	if (Option.encoding)
+		eFree (Option.encoding);
+	Option.encoding = eStrdup(parameter);
 }
 #endif
 
@@ -956,21 +941,11 @@ static void printFeatureList (void)
 
 static void printProgramIdentification (void)
 {
-#ifndef SUPPORT_MBCS_JA_COMMENT
 	printf ("%s %s, %s %s\n",
 	        PROGRAM_NAME, PROGRAM_VERSION,
 	        PROGRAM_COPYRIGHT, AUTHOR_NAME);
-#else
-	printf ("%s %s%s, %s %s\n",
-	        PROGRAM_NAME, PROGRAM_VERSION, PROGRAM_JP_VERSION,
-	        PROGRAM_COPYRIGHT, AUTHOR_NAME);
-#endif
 	printf ("  Compiled: %s, %s\n", __DATE__, __TIME__);
 	printf ("  Addresses: <%s>, %s\n", AUTHOR_EMAIL, PROGRAM_URL);
-#ifdef SUPPORT_MBCS_JA_COMMENT
-    printf("  Japanese patch  by %s <%s>\n", JP_AUTHOR_NAME, JP_AUTHOR_TWITTER);
-    printf("                     %s\n", JP_AUTHOR_URL);
-#endif
 	printFeatureList ();
 }
 
@@ -1423,8 +1398,8 @@ static parametricOption ParametricOptions [] = {
 	{ "filter-terminator",      processFilterTerminatorOption,  TRUE    },
 	{ "format",                 processFormatOption,            TRUE    },
 	{ "help",                   processHelpOption,              TRUE    },
-#ifdef SUPPORT_MBCS_JA_COMMENT
-	{ "jcode",			processJcodeOption,		FALSE	},
+#ifdef HAVE_ICONV
+	{ "encoding",               processEncodingOption,          FALSE   },
 #endif
 	{ "lang",                   processLanguageForceOption,     FALSE   },
 	{ "language",               processLanguageForceOption,     FALSE   },
@@ -1544,6 +1519,10 @@ static void processLongOption (
 		;
 	else if (processRegexOption (option, parameter))
 		;
+#ifdef HAVE_ICONV
+	else if (processLanguageEncodingOption (option, parameter))
+		;
+#endif
 #ifndef RECURSE_SUPPORTED
 	else if (strcmp (option, "recurse") == 0)
 		error (WARNING, "%s option not supported on this host", option);
