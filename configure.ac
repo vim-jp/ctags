@@ -59,7 +59,7 @@ AH_VERBATIM([EXTERNAL_SORT], [
 # undef EXTERNAL_SORT
 #endif
 ])
-AH_TEMPLATE([ICONV],
+AH_TEMPLATE([HAVE_ICONV],
 	[Define this value if support multibyte character encoding.])
 AH_TEMPLATE([TMPDIR],
 	[If you wish to change the directory in which temporary files are stored,
@@ -221,22 +221,6 @@ fi
 if test "$enable_macro_patterns" = yes ; then
 	AC_DEFINE(MACROS_USE_PATTERNS)
 	AC_MSG_RESULT(tag file will use patterns for macros by default)
-fi
-
-if test "$enable_iconv" = yes ; then
-	AC_CHECK_LIB([c], [iconv_open], [LDFLAGS="$LDFLAGS -lc" HAVE_ICONV=1], [])
-	if test "x$HAVE_ICONV" = "x"; then
-		dnl But it's possible this implementation of libiconv doesn't have a libiconv_* define
-		AC_CHECK_LIB([iconv], [iconv_open], [LDFLAGS="$LDFLAGS -liconv" HAVE_ICONV=1], [])
-	fi
-	if test "x$HAVE_ICONV" = "x"; then
-		dnl No iconv library was found; issue a warning to the console
-		AC_MSG_ERROR([Could not find libiconv. Please install libiconv and libiconv-devel.])
-	fi
-	if test "x$HAVE_ICONV" != "x"; then
-		AC_DEFINE(HAVE_ICONV)
-		AC_DEFINE(MBCS_CODE,[])
-	fi
 fi
 
 # Checks for programs
@@ -535,6 +519,24 @@ if test "$have_truncate" = yes ; then
 fi
 if test "$have_ftruncate" = yes ; then
 	CHECK_PROTO(ftruncate, unistd.h)
+fi
+
+# Process library configuration options
+# -------------------------------------
+
+if test "$enable_iconv" = yes ; then
+	save_LIBS="$LIBS"
+	LIBS="$LIBS -liconv"
+	AC_MSG_CHECKING(for iconv_open with -liconv)
+	AC_LINK_IFELSE([AC_LANG_PROGRAM([
+			#include <iconv.h>
+		], [iconv_open("fr", "to")])], [
+			AC_MSG_RESULT(yes)
+			AC_DEFINE(HAVE_ICONV)
+		], [LIBS="$save_LIBS"
+			AC_MSG_RESULT(no)
+			AC_CHECK_FUNC(iconv_open, [AC_DEFINE(HAVE_ICONV)],
+				[AC_MSG_ERROR([Could not find libiconv. Please install libiconv and libiconv-devel.])])])
 fi
 
 
