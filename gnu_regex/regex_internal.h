@@ -416,6 +416,10 @@ static unsigned int re_string_context_at (const re_string_t *input, int idx,
 
 #ifdef WIN32
 # include <malloc.h>
+# ifdef _MSC_VER
+#  define __attribute(arg)
+#  define inline __inline
+# endif
 #else
 # include <alloca.h>
 #endif

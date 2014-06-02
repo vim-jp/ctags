@@ -927,9 +927,9 @@ static void
 internal_function
 init_word_char (re_dfa_t *dfa)
 {
-  dfa->word_ops_used = 1;
   int i = 0, j;
   int ch = 0;
+  dfa->word_ops_used = 1;
   if (BE (dfa->map_notascii == 0, 1))
     {
       if (sizeof (dfa->word_char[0]) == 8)
