@@ -1,6 +1,7 @@
 *~
 *.swp
 *.o
+*.obj
 *.od
 
 Makefile
@@ -17,5 +18,7 @@ ctags.ref
 tags.ref
 test.*.diff
 syntax.vim
+*.exe
+respmvc
 
 tags
