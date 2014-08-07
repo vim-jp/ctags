@@ -12,9 +12,6 @@
 /*
 *   INCLUDE FILES
 */
-#define __USE_GNU
-#include "general.h"  /* must always come first */
-
 #ifdef HAVE_ICONV
 
 #include <stdio.h>
@@ -55,7 +52,7 @@ extern boolean convertString (vString *const string)
 retry:
 	if (iconv (iconv_fd, &mbcs, &mbcs_len, &utf8ptr, &utf8_len) == (size_t) -1)
 	{
-	  	eFree (utf8);
+		eFree (utf8);
 		return FALSE;
 	}
 	if (errno == EILSEQ)
@@ -75,7 +72,7 @@ retry:
 		vStringAutoResize (string);
 	memcpy (vStringValue (string), utf8, utf8_size + 1);
 	vStringLength (string) = utf8_size;
-  	eFree (utf8);
+	eFree (utf8);
 
 	iconv (iconv_fd, (void*)0, (void*)0, &utf8ptr, &utf8_len);
 
