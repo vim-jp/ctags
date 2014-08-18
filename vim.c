@@ -428,7 +428,8 @@ static boolean parseCommand (const unsigned char *line)
 		 * Read the next line and continue processing it as a command.
 		 */
 		line = readVimLine();
-		parseCommand(line);
+		if ( line )
+			parseCommand(line);
 		goto cleanUp;
 	}
 
@@ -716,7 +717,10 @@ static void findVimTags (void)
 	/* TODO - change this into a structure */
 
 	line = readVimLine();
-
+	if (line == NULL)
+	{
+		return;
+	}
 	if ( strncmp ((const char*) line, "UseVimball", (size_t) 10) == 0 )
 	{
 		parseVimBallFile (line);
