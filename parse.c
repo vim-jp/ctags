@@ -657,11 +657,12 @@ static unsigned int EncodingMapMax;
 static void addLanguageEncoding (const langType language,
 									const char *const encoding __unused__)
 {
-	if (language > EncodingMapMax)
+	if (language > EncodingMapMax || EncodingMapMax == 0)
 	{
 		int i;
+		int istart = (EncodingMapMax == 0)? 0: EncodingMapMax + 1;
 		EncodingMap = xRealloc (EncodingMap, (language + 1), char*);
-		for (i = EncodingMapMax + 1  ;  i <= language  ;  ++i)
+		for (i = istart;  i <= language  ;  ++i)
 		{
 			EncodingMap [i] = NULL;
 		}
@@ -693,7 +694,7 @@ extern void freeEncodingResources (void)
 	if (EncodingMap)
 	{
 		int i;
-		for (i = 0  ;  i < EncodingMapMax  ; ++i)
+		for (i = 0  ;  i <= EncodingMapMax  ; ++i)
 		{
 			if (EncodingMap [i])
 				eFree (EncodingMap [i]);
