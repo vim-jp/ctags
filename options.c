@@ -668,7 +668,8 @@ static void addExtensionList (
 	}
 	while (extension != NULL)
 	{
-		char *separator = strchr (extension, EXTENSION_SEPARATOR);
+		char *separator = strchr (const_cast<char *>(extension),
+				EXTENSION_SEPARATOR);
 		if (separator != NULL)
 			*separator = '\0';
 		verbose ("%s%s", first ? "" : ", ",
